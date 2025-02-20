@@ -4,7 +4,7 @@ import { z } from "zod"
     name: z.string(),
     type: z.enum(["Man", "Women", "Other"]),
     age: z.number(),
-    ethinicity: z.enum([
+    ethenecity: z.enum([
         "White", 
         "Black", 
         "Asian American", 
@@ -22,10 +22,11 @@ import { z } from "zod"
 
 export const GenerateImage = z.object({
     prompt: z.string(),
-    modelId: z.string()
+    modelId: z.string(),
+    num: z.number(),
 })
 
-export const GenerateImagesFromPromp = z.object({
+export const GenerateImagesFromPack = z.object({
     modelId: z.string(),
     packId: z.string(),
 })
