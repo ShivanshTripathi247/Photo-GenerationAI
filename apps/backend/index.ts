@@ -1,7 +1,7 @@
 import express from "express";
 import { TrainModel,GenerateImage,GenerateImagesFromPack } from "common/types";
 import { prismaClient } from "db";
-import { s3,write,S3Client } from "bun";
+import { S3Client } from "bun";
 import { FalAIModel } from "./models/FalAIModel";
 
 const USER_ID = "1234";
@@ -11,6 +11,22 @@ const falAiModel = new FalAIModel();
 
 const app = express();
 app.use(express.json())
+
+app.get("/pre-signed-url", async (req, res) => {
+    const key = `models/${Date.now()}_${Math.random()}.zip`;
+    const url = S3Client.presign(`models/${Date.now()}_${Math.random()}.zip`, {
+        accessKeyId: process.env.S3_ACCESS_KEY,
+        secretAccessKey: process.env.S3_SECRET_KEY,
+        endpoint: process.env.ENDPOINT,
+        bucket: process.env.BUCKET_NAME,
+        expiresIn: 60 * 5
+    })
+
+    res.json({
+        url,
+        key
+    })
+})
 
 app.post("/ai/training", async (req,res) => {
     const parsedBody = TrainModel.safeParse(req.body)
@@ -22,7 +38,7 @@ app.post("/ai/training", async (req,res) => {
         return
     }
 
-    const { request_id, response_url } = await falAiModel.trainModel("", parsedBody.data.name);
+    const { request_id, response_url } = await falAiModel.trainModel(parsedBody.data.zipUrl, parsedBody.data.name);
 
     const data = await prismaClient.model.create({
         data: {
@@ -34,7 +50,8 @@ app.post("/ai/training", async (req,res) => {
             eyeColor: parsedBody.data.eyeColor,
             bald: parsedBody.data.bald,
             userId: USER_ID,
-            falAiRequestId: request_id
+            zipUrl: parsedBody.data.zipUrl,
+            falAiRequestId: request_id,
         }
     })
 
@@ -94,6 +111,10 @@ app.post("/pack/generate", async (req,res) => {
         }
     })
 
+    let requestIds: { request_id: string }[] = await Promise.all(
+        prompts.map(async (prompt) => falAiModel
+        .generateImage(prompt.prompt, parseBody.data.modelId)));
+
     const images = await prismaClient.outputImages.createManyAndReturn({
         data: prompts.map((prompt) => ({
             prompt: prompt.prompt,
@@ -138,7 +159,6 @@ app.get("/image/bulk", async (req,res) => {
 })
 
 app.post("/fal-ai/webhook/train", async (req,res) => {
-    console.log(req.body);
     //update the status of the image in the DB
     const requestId = req.body.request_id
 
