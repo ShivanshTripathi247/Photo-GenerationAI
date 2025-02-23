@@ -19,16 +19,98 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { FileUpload } from '@/components/ui/file-upload'
+import JSZip from 'jszip'
 
 
 type Props = {}
 
 const Train = (props: Props) => {
   const [files, setFiles] = useState<File[]>([]);
-  const handleFileUpload = (files: File[]) => {
+  
+  const handleFileUpload = async (files: File[]) => {
     setFiles(files);
-    console.log(files);
+    
+    const zip = new JSZip();
+    // Add all files to the zip
+    files.forEach(file => {
+      zip.file(file.name, file);
+    });
+
+    // Generate the zip file
+    const content = await zip.generateAsync({ type: 'blob' });
+    const zipFile = new File([content], 'uploaded-images.zip', {
+      type: 'application/zip',
+    });
+
+    // Log file details
+    console.log('Original files:', files);
+    console.log('Zip file created:', {
+      name: zipFile.name,
+      size: zipFile.size,
+      type: zipFile.type,
+    });
+
+    // Optional: Create download link
+    const url = URL.createObjectURL(zipFile);
+    console.log('Zip file URL:', url);
+    // You can trigger download with: 
+    // const a = document.createElement('a');
+    // a.href = url;
+    // a.download = zipFile.name;
+    // a.click();
   };
+
+  const handleZipRequest = async (files: File[]) => {
+    const zip = new JSZip();
+    
+    // Add files to zip
+    files.forEach(file => {
+      zip.file(file.name, file);
+    });
+
+    // Generate zip content
+    const content = await zip.generateAsync({ type: 'blob' });
+    
+    // Create File object
+    const zipFile = new File([content], 'uploaded-images.zip', {
+      type: 'application/zip',
+    });
+
+    // Log results
+    console.log('Zip file created:', {
+      name: zipFile.name,
+      size: zipFile.size,
+      type: zipFile.type,
+    });
+    
+    // Optional: Trigger download
+    // const url = URL.createObjectURL(zipFile);
+    // const a = document.createElement('a');
+    // a.href = url;
+    // a.download = zipFile.name;
+    // a.click();
+  };
+
+  const handleCreateZip = async () => {
+    if (files.length === 0) {
+      alert('Please upload files first');
+      return;
+    }
+
+    const zip = new JSZip();
+    files.forEach(file => {
+      zip.file(file.name, file);
+    });
+
+    const content = await zip.generateAsync({ type: 'blob' });
+    const zipFile = new File([content], 'uploaded-images.zip', {
+      type: 'application/zip',
+    });
+
+    console.log('Zip file created:', zipFile);
+    // Add your submission logic here
+  };
+
   return (
     <div className='flex flex-col items-center justify-center h-full  bg-black'>
     <Card className="md:w-[500px] lg:w-[700px] bg-neutral-800 text-white">
@@ -108,12 +190,15 @@ const Train = (props: Props) => {
           </div>
         </form>
         <div className="w-full max-w-4xl mx-auto min-h-96 border border-dashed bg-white dark:bg-black border-neutral-200 dark:border-neutral-800 rounded-lg">
-          <FileUpload onChange={handleFileUpload} />
+          <FileUpload 
+            onChange={handleFileUpload}
+            onZip={handleZipRequest}
+          />
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">
         <Button variant="outline">Cancel</Button>
-        <Button>Create Model</Button>
+        <Button onClick={handleCreateZip}>Create Model & Zip Files</Button>
       </CardFooter>      
     </Card>
     </div>
