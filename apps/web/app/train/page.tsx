@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/select"
 import { FileUpload } from '@/components/ui/file-upload'
 import JSZip from 'jszip'
+import axios from 'axios'
+import { BACKEND_URL } from '../config'
 
 
 type Props = {}
@@ -82,6 +84,15 @@ const Train = (props: Props) => {
       size: zipFile.size,
       type: zipFile.type,
     });
+
+    //Backend Integration
+    const res1 = await axios.get(`${BACKEND_URL}/pre-signed-url`)
+    const url = res1.data.url;
+    const formData = new FormData();
+    formData.append("file", content);
+    formData.append("key", url);
+    const res2 = await axios.put(url, formData);
+    console.log(res2.data);
     
     // Optional: Trigger download
     // const url = URL.createObjectURL(zipFile);
@@ -106,9 +117,11 @@ const Train = (props: Props) => {
     const zipFile = new File([content], 'uploaded-images.zip', {
       type: 'application/zip',
     });
+    
 
     console.log('Zip file created:', zipFile);
     // Add your submission logic here
+
   };
 
   return (
@@ -188,13 +201,13 @@ const Train = (props: Props) => {
               </Select>
             </div>
           </div>
-        </form>
-        <div className="w-full max-w-4xl mx-auto min-h-96 border border-dashed bg-white dark:bg-black border-neutral-200 dark:border-neutral-800 rounded-lg">
-          <FileUpload 
-            onChange={handleFileUpload}
-            onZip={handleZipRequest}
-          />
-        </div>
+          <div className="w-full max-w-4xl mx-auto min-h-96 border border-dashed bg-white dark:bg-black border-neutral-200 dark:border-neutral-800 rounded-lg">
+            <FileUpload 
+              onChange={handleFileUpload}
+              onZip={handleZipRequest}
+            />
+          </div>
+        </form>        
       </CardContent>
       <CardFooter className="flex justify-between">
         <Button variant="outline">Cancel</Button>

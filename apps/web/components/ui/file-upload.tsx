@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { IconUpload, IconX, IconCheck } from "@tabler/icons-react";
 import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
+import { BACKEND_URL } from "@/app/config";
 
 const mainVariant = {
   initial: {
@@ -73,6 +75,7 @@ export const FileUpload = ({
       setZipStatus('loading');
       await onZip(files);
       setZipStatus('zipped');
+      // ///
     } catch (error) {
       console.error('Zip creation failed:', error);
       setZipStatus('idle');
