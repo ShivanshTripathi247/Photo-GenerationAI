@@ -30,36 +30,9 @@ const Train = (props: Props) => {
   const [files, setFiles] = useState<File[]>([]);
   
   const handleFileUpload = async (files: File[]) => {
-    setFiles(files);
-    
-    const zip = new JSZip();
-    // Add all files to the zip
-    files.forEach(file => {
-      zip.file(file.name, file);
-    });
-
-    // Generate the zip file
-    const content = await zip.generateAsync({ type: 'blob' });
-    const zipFile = new File([content], 'uploaded-images.zip', {
-      type: 'application/zip',
-    });
-
-    // Log file details
+    setFiles(files);    // Log file details
     console.log('Original files:', files);
-    console.log('Zip file created:', {
-      name: zipFile.name,
-      size: zipFile.size,
-      type: zipFile.type,
-    });
-
-    // Optional: Create download link
-    const url = URL.createObjectURL(zipFile);
-    console.log('Zip file URL:', url);
-    // You can trigger download with: 
-    // const a = document.createElement('a');
-    // a.href = url;
-    // a.download = zipFile.name;
-    // a.click();
+    
   };
 
   const handleZipRequest = async (files: File[]) => {
@@ -100,28 +73,6 @@ const Train = (props: Props) => {
     // a.href = url;
     // a.download = zipFile.name;
     // a.click();
-  };
-
-  const handleCreateZip = async () => {
-    if (files.length === 0) {
-      alert('Please upload files first');
-      return;
-    }
-
-    const zip = new JSZip();
-    files.forEach(file => {
-      zip.file(file.name, file);
-    });
-
-    const content = await zip.generateAsync({ type: 'blob' });
-    const zipFile = new File([content], 'uploaded-images.zip', {
-      type: 'application/zip',
-    });
-    
-
-    console.log('Zip file created:', zipFile);
-    // Add your submission logic here
-
   };
 
   return (
@@ -211,7 +162,7 @@ const Train = (props: Props) => {
       </CardContent>
       <CardFooter className="flex justify-between">
         <Button variant="outline">Cancel</Button>
-        <Button onClick={handleCreateZip}>Create Model & Zip Files</Button>
+        <Button >Create Model</Button>
       </CardFooter>      
     </Card>
     </div>
