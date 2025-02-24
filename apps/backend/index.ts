@@ -1,11 +1,16 @@
+import path from "path";
 import express from "express";
 import { TrainModel,GenerateImage,GenerateImagesFromPack } from "common/types";
 import { prismaClient } from "db";
-import { S3Client } from "bun";
 import { FalAIModel } from "./models/FalAIModel";
 import cors from "cors"
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+
 
 const USER_ID = "1234";
+
+
 const PORT = process.env.PORT || 8080;
 
 const falAiModel = new FalAIModel();
@@ -13,24 +18,52 @@ const falAiModel = new FalAIModel();
 const app = express();
 app.use(cors());
 app.use(express.json())
+console.log(process.env.R2_ENDPOINT);
+console.log(process.env.R2_BUCKET_NAME);
 
-app.get("/pre-signed-url", async (req, res) => {
-    const key = `models/${Date.now()}_${Math.random()}.zip`;
-    const url = S3Client.presign(key, {
-      method: "PUT",
-      accessKeyId: process.env.S3_ACCESS_KEY,
-      secretAccessKey: process.env.S3_SECRET_KEY,
-      endpoint: process.env.ENDPOINT,
-      bucket: process.env.BUCKET_NAME,
-      expiresIn: 60 * 5,
-      type: "application/zip",
-    });
+console.log("Environment variables:", {
+    R2_ACCESS_KEY: process.env.R2_ACCESS_KEY ? "exists" : "missing",
+    R2_SECRET_KEY: process.env.R2_SECRET_KEY ? "exists" : "missing",
+    ENDPOINT: process.env.R2_ENDPOINT,
+    BUCKET_NAME: process.env.R2_BUCKET_NAME
+  });
+
+if (!process.env.R2_ACCESS_KEY || !process.env.R2_SECRET_KEY ) {
+    throw new Error("Missing required environment variables");
+  }
+
+const s3Client = new S3Client({
+    region: "auto" as const,  // Type assertion for region
+    endpoint: process.env.R2_ENDPOINT ?? "", // Provide default value
+    credentials: {
+      accessKeyId: process.env.R2_ACCESS_KEY ?? "", // Null coalescing
+      secretAccessKey: process.env.R2_SECRET_KEY ?? "", // Null coalescing
+    }
+  });
   
-    res.json({
-      url,
-      key,
-    });
-});
+  app.get("/pre-signed-url", async (req, res) => {
+    try {
+      const key = `models/${Date.now()}_${Math.random()}.zip`;
+      
+      const command = new PutObjectCommand({
+        Bucket: process.env.R2_BUCKET_NAME ?? "", // Provide default value
+        Key: key,
+        ContentType: "application/zip",
+      });
+  
+      const url = await getSignedUrl(s3Client, command, {
+        expiresIn: 60 * 5
+      });
+      
+      res.json({
+        url,
+        key,
+      });
+    } catch (error) {
+      console.error("Error generating presigned URL:", error);
+      res.status(500).json({ error: "Failed to generate presigned URL" });
+    }
+  });
 
 app.post("/ai/training", async (req,res) => {
     const parsedBody = TrainModel.safeParse(req.body)
