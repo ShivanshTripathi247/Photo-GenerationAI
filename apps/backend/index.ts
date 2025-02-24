@@ -17,20 +17,20 @@ app.use(express.json())
 app.get("/pre-signed-url", async (req, res) => {
     const key = `models/${Date.now()}_${Math.random()}.zip`;
     const url = S3Client.presign(key, {
-        method: "PUT",
-        accessKeyId: process.env.S3_ACCESS_KEY,
-        secretAccessKey: process.env.S3_SECRET_KEY,
-        endpoint: process.env.ENDPOINT,
-        bucket: process.env.BUCKET_NAME,
-        expiresIn: 60 * 5,
-        type: "application/zip"
-    })
-
+      method: "PUT",
+      accessKeyId: process.env.S3_ACCESS_KEY,
+      secretAccessKey: process.env.S3_SECRET_KEY,
+      endpoint: process.env.ENDPOINT,
+      bucket: process.env.BUCKET_NAME,
+      expiresIn: 60 * 5,
+      type: "application/zip",
+    });
+  
     res.json({
-        url,
-        key
-    })
-})
+      url,
+      key,
+    });
+});
 
 app.post("/ai/training", async (req,res) => {
     const parsedBody = TrainModel.safeParse(req.body)
@@ -200,6 +200,6 @@ app.post("/fal-ai/webhook/image", async (req,res) => {
 })
 
 app.listen(8080, () => {
-    console.log("Sever is running on port 8080 \nhttp://localhost:8080");
+    console.log(`Sever is running on port ${PORT} \nhttp://localhost:${PORT}`);
     
 })
