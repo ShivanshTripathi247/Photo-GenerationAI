@@ -21,13 +21,24 @@ import {
 import { FileUpload } from '@/components/ui/file-upload'
 import JSZip from 'jszip'
 import axios from 'axios'
-import { BACKEND_URL } from '../config'
+import { BACKEND_URL, CLOUDFLARE_URL } from '../config'
 
 
 type Props = {}
 
 const Train = (props: Props) => {
   const [files, setFiles] = useState<File[]>([]);
+  const [uploadUrl, setUploadUrl] = useState<string>("");
+
+  const onUploadDone = (url: string) => {
+    console.log("Final upload URL:", url);
+    setUploadUrl(url);
+    
+    // You can add additional logic here like:
+    // - Update UI state
+    // - Trigger model creation
+    // - Show success notification
+  };
   
   const handleFileUpload = async (files: File[]) => {
     setFiles(files);    // Log file details
@@ -36,36 +47,49 @@ const Train = (props: Props) => {
   };
 
   const handleZipRequest = async (files: File[]) => {
-    const zip = new JSZip();
-    
-    // Add files to zip
-    files.forEach(file => {
-      zip.file(file.name, file);
-    });
+    try{
+      const zip = new JSZip();
+      
+      // Add files to zip
+      files.forEach(file => {
+        zip.file(file.name, file);
+      });
 
-    // Generate zip content
-    const content = await zip.generateAsync({ type: 'blob' });
-    
-    // Create File object
-    const zipFile = new File([content], 'uploaded-images.zip', {
-      type: 'application/zip',
-    });
+      // Generate zip content
+      const content = await zip.generateAsync({ type: 'blob' });
+      
+      // Create File object
+      const zipFile = new File([content], 'uploaded-images.zip', {
+        type: 'application/zip',
+      });
 
-    // Log results
-    console.log('Zip file created:', {
-      name: zipFile.name,
-      size: zipFile.size,
-      type: zipFile.type,
-    });
+      // Log results
+      console.log('Zip file created:', {
+        name: zipFile.name,
+        size: zipFile.size,
+        type: zipFile.type,
+      });
 
-    //Backend Integration
-    const res1 = await axios.get(`${BACKEND_URL}/pre-signed-url`)
-    const url = res1.data.url;
-    const formData = new FormData();
-    formData.append("file", content);
-    formData.append("key", url);
-    const res2 = await axios.put(url, formData);
-    console.log(res2.data);
+      //Backend Integration
+      const res1 = await axios.get(`${BACKEND_URL}/pre-signed-url`)
+      const { url, key } = res1.data;
+      
+      // Upload the zip content directly
+      await axios.put(url, content, {
+        headers: {
+          'Content-Type': 'application/zip',
+        }
+      });
+
+      // Call the completion handler
+      const finalUrl = `${CLOUDFLARE_URL}/${key}`;
+      console.log('Upload completed, final URL:', finalUrl);
+      onUploadDone(finalUrl);
+      
+    } catch (error) {
+      console.error('Upload failed:', error);
+      // Handle errors appropriately
+    }
     
     // Optional: Trigger download
     // const url = URL.createObjectURL(zipFile);

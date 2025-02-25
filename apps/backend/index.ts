@@ -18,19 +18,6 @@ const falAiModel = new FalAIModel();
 const app = express();
 app.use(cors());
 app.use(express.json())
-console.log(process.env.R2_ENDPOINT);
-console.log(process.env.R2_BUCKET_NAME);
-
-console.log("Environment variables:", {
-    R2_ACCESS_KEY: process.env.R2_ACCESS_KEY ? "exists" : "missing",
-    R2_SECRET_KEY: process.env.R2_SECRET_KEY ? "exists" : "missing",
-    ENDPOINT: process.env.R2_ENDPOINT,
-    BUCKET_NAME: process.env.R2_BUCKET_NAME
-  });
-
-if (!process.env.R2_ACCESS_KEY || !process.env.R2_SECRET_KEY ) {
-    throw new Error("Missing required environment variables");
-  }
 
 const s3Client = new S3Client({
     region: "auto" as const,  // Type assertion for region
@@ -54,7 +41,7 @@ const s3Client = new S3Client({
       const url = await getSignedUrl(s3Client, command, {
         expiresIn: 60 * 5
       });
-      
+         
       res.json({
         url,
         key,
