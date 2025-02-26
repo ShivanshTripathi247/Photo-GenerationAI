@@ -22,17 +22,41 @@ import { FileUpload } from '@/components/ui/file-upload'
 import JSZip from 'jszip'
 import axios from 'axios'
 import { BACKEND_URL, CLOUDFLARE_URL } from '../config'
+import { TrainModalInput } from "common/inferred"
+import { useRouter } from 'next/router'
 
 
 type Props = {}
 
-const Train = (props: Props) => {
-  const [files, setFiles] = useState<File[]>([]);
-  const [uploadUrl, setUploadUrl] = useState<string>("");
+export default function Train(props: Props)  {
+  const [ files, setFiles ] = useState<File[]>([]);
+  const [ zipUrl, setZipUrl ] = useState<string>("");
+  const [ type, setType ] = useState("Man");
+  const [ age,setAge ] = useState<string>();
+  const [ ethenecity, setEthenecity ] = useState<string>();
+  const [ eyeColor, setEyeColor ] = useState<string>();
+  const [ bald, setBald ] = useState(false);
+  const [ name, setName ] = useState("")
+  const router = useRouter();
+
+  async function trainModal() {
+    //add type here
+    const input = {
+      zipUrl,
+      type,
+      age,
+      ethenecity,
+      eyeColor,
+      bald
+    }
+
+    const response = await axios.post(`${BACKEND_URL}/ai/training`);
+    router.push("/");
+  }
 
   const onUploadDone = (url: string) => {
     console.log("Final upload URL:", url);
-    setUploadUrl(url);
+    setZipUrl(url);
     
     // You can add additional logic here like:
     // - Update UI state
@@ -111,11 +135,13 @@ const Train = (props: Props) => {
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="name">Name</Label>
-              <Input className='border-gray-300' id="name" placeholder="Name of the model." />
+              <Input onChange={(e) => setName(e.target.value)} className='border-gray-300' id="name" placeholder="Name of the model." />
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="type">Gender</Label>
-              <Select>
+              <Select onValueChange={(value) => {
+                setType(value)
+              }}>
                 <SelectTrigger className='border-gray-300' id='type'>
                   <SelectValue placeholder='Select your gender'/>
                 </SelectTrigger>
@@ -185,12 +211,13 @@ const Train = (props: Props) => {
         </form>        
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="outline">Cancel</Button>
-        <Button >Create Model</Button>
+        <Button variant="outline" onClick={() =>  {
+          router.push('/')
+        }}>Cancel</Button>
+        <Button disabled={!zipUrl || !type || !age || !ethenecity || ! !eyeColor || !bald} onClick={trainModal}>Create Modal</Button>
       </CardFooter>      
     </Card>
     </div>
   )
 }
 
-export default Train
