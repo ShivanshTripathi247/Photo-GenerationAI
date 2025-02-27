@@ -2,7 +2,7 @@
 CREATE TYPE "ModelTypeEnum" AS ENUM ('Man', 'Woman', 'Others');
 
 -- CreateEnum
-CREATE TYPE "EthenecityEnum" AS ENUM ('White', 'Black', 'AsianAmerican', 'EastAsian', 'SouthEastAsian', 'SouthAsian', 'MiddleEastern', 'Pacific', 'Hispanic');
+CREATE TYPE "ethnicityEnum" AS ENUM ('White', 'Black', 'AsianAmerican', 'EastAsian', 'SouthEastAsian', 'SouthAsian', 'MiddleEastern', 'Pacific', 'Hispanic');
 
 -- CreateEnum
 CREATE TYPE "EyeColorEnum" AS ENUM ('Brown', 'Blue', 'Hazel', 'Gray');
@@ -24,7 +24,7 @@ CREATE TABLE "Model" (
     "name" TEXT NOT NULL,
     "type" "ModelTypeEnum" NOT NULL,
     "age" INTEGER NOT NULL,
-    "ethenecity" "EthenecityEnum" NOT NULL,
+    "ethnicity" "ethnicityEnum" NOT NULL,
     "eyeColor" "EyeColorEnum" NOT NULL,
     "bald" BOOLEAN NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

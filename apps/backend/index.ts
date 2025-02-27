@@ -54,15 +54,20 @@ const s3Client = new S3Client({
 
 app.post("/ai/training", async (req,res) => {
     const parsedBody = TrainModel.safeParse(req.body)
-
+    console.log(parsedBody);
+    
     if (!parsedBody.success) {
+        console.log(parsedBody);
         res.status(411).json({
             message: "Input Incorrect"
         })
         return
     }
 
-    const { request_id, response_url } = await falAiModel.trainModel(parsedBody.data.zipUrl, parsedBody.data.name);
+    const { request_id, response_url } = await falAiModel.trainModel(
+        parsedBody.data.zipUrl,
+        parsedBody.data.name,
+    );
 
     const data = await prismaClient.model.create({
         data: {
@@ -70,7 +75,7 @@ app.post("/ai/training", async (req,res) => {
             name: parsedBody.data.name,
             type: parsedBody.data.type,
             age: parsedBody.data.age,
-            ethenecity: parsedBody.data.ethenecity,
+            ethnicity: parsedBody.data.ethnicity,
             eyeColor: parsedBody.data.eyeColor,
             bald: parsedBody.data.bald,
             userId: USER_ID,
@@ -219,7 +224,7 @@ app.post("/fal-ai/webhook/image", async (req,res) => {
     })    
 })
 
-app.listen(8080, () => {
+app.listen(PORT, () => {
     console.log(`Sever is running on port ${PORT} \nhttp://localhost:${PORT}`);
     
 })
