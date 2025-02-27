@@ -6,6 +6,7 @@ import { FalAIModel } from "./models/FalAIModel";
 import cors from "cors"
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { authMiddleware } from "./middleware";
 
 
 const USER_ID = "1234";
@@ -52,7 +53,7 @@ const s3Client = new S3Client({
     }
   });
 
-app.post("/ai/training", async (req,res) => {
+app.post("/ai/training", authMiddleware, async (req,res) => {
     const parsedBody = TrainModel.safeParse(req.body)
     console.log(parsedBody);
     
@@ -96,7 +97,7 @@ app.post("/ai/training", async (req,res) => {
     })
 })
 
-app.post("/ai/generate", async (req,res) => {
+app.post("/ai/generate", authMiddleware, async (req,res) => {
     const parsedBody = GenerateImage.safeParse(req.body)
 
     if (!parsedBody.success) {
@@ -131,7 +132,7 @@ app.post("/ai/generate", async (req,res) => {
     })
 })
 
-app.post("/pack/generate", async (req,res) => {
+app.post("/pack/generate", authMiddleware, async (req,res) => {
     const parseBody = GenerateImagesFromPack.safeParse(req.body)
 
     if (!parseBody.success) {
@@ -166,7 +167,7 @@ app.post("/pack/generate", async (req,res) => {
 
 })
 
-app.get("/pack/bulk", async (req,res) => {
+app.get("/pack/bulk",  async (req,res) => {
 
     const packs = await prismaClient.packs.findMany({})
 
@@ -175,7 +176,7 @@ app.get("/pack/bulk", async (req,res) => {
     })
 })
 
-app.get("/image/bulk", async (req,res) => {
+app.get("/image/bulk", authMiddleware, async (req,res) => {
     const ids = req.query.images as string[]
     const limit = req.query.limit as string ?? "10";
     const offset = req.query.offset as string ?? "0";

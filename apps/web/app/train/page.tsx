@@ -26,6 +26,7 @@ import { TrainModalInput } from "common/inferred"
 import { useRouter } from 'next/navigation'
 import { Switch } from '@/components/ui/switch'
 import { log } from 'console'
+import { useAuth } from '@clerk/nextjs'
 
 
 type Props = {}
@@ -38,7 +39,8 @@ export default function Train(props: Props)  {
   const [ ethnicity, setethnicity ] = useState<string>();
   const [ eyeColor, setEyeColor ] = useState<string>();
   const [ bald, setBald ] = useState(false);
-  const [ name, setName ] = useState("")
+  const [ name, setName ] = useState("");
+  const [ getToken ] = useAuth();
   const router = useRouter();
 
   async function trainModal() {
@@ -55,8 +57,10 @@ export default function Train(props: Props)  {
     console.log("Payload:", input);
   
     try {
+      const token = await getToken();
       const response = await axios.post(`${BACKEND_URL}/ai/training`, input, {
         headers: {
+          token : `bearer ${token}`,
           'Content-Type': 'application/json',
         },
         validateStatus: () => true, // Bypass axios built-in error throwing

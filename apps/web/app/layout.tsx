@@ -3,6 +3,14 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { ModeToggle } from "@/components/theme/theme-button";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/nextjs'
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -24,6 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <ClerkProvider>
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
       <ThemeProvider
@@ -32,12 +41,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <nav className="h-10">
-              <aside className="right"><ModeToggle/></aside>
-            </nav>
         {children}
         </ThemeProvider>
       </body>
     </html>
+    </ClerkProvider>
   );
 }
