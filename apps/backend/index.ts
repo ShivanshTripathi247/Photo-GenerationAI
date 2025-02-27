@@ -68,6 +68,13 @@ app.post("/ai/training", async (req,res) => {
         parsedBody.data.zipUrl,
         parsedBody.data.name,
     );
+    // const { request_id, response_url } = process.env.TEST_MODE ? {
+    //     request_id: `mock-${Date.now()}`,
+    //     response_url: "https://example.com/mock-training"
+    // } : await falAiModel.trainModel(
+    //     parsedBody.data.zipUrl,
+    //     parsedBody.data.name,
+    // );
 
     const data = await prismaClient.model.create({
         data: {
