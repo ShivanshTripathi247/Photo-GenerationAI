@@ -25,7 +25,6 @@ import { BACKEND_URL, CLOUDFLARE_URL } from '../config'
 import { TrainModalInput } from "common/inferred"
 import { useRouter } from 'next/navigation'
 import { Switch } from '@/components/ui/switch'
-import { log } from 'console'
 import { useAuth } from '@clerk/nextjs'
 
 
@@ -36,11 +35,11 @@ export default function Train(props: Props)  {
   const [ zipUrl, setZipUrl ] = useState<string>("");
   const [ type, setType ] = useState("Man");
   const [ age,setAge ] = useState<string>();
-  const [ ethnicity, setethnicity ] = useState<string>();
+  const [ ethnicity, setEthnicity ] = useState<string>();
   const [ eyeColor, setEyeColor ] = useState<string>();
   const [ bald, setBald ] = useState(false);
   const [ name, setName ] = useState("");
-  const [ getToken ] = useAuth();
+  const { getToken } = useAuth();
   const router = useRouter();
 
   async function trainModal() {
@@ -181,9 +180,9 @@ export default function Train(props: Props)  {
               }} className='border-gray-300' id="name" placeholder="Enter your age." />
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="framework">ethnicity</Label>
+              <Label htmlFor="ethnicity">Ethnicity</Label>
               <Select onValueChange={(value) => {
-                setethnicity(value)
+                setEthnicity(value)
               }}>
                 <SelectTrigger className='border-gray-300' id="ethnicity">
                   <SelectValue placeholder="Select your ethnicity." />

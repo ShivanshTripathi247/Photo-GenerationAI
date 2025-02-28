@@ -7,11 +7,11 @@ import { z } from "zod"
     ethnicity: z.enum([
         "White", 
         "Black", 
-        "Asian American", 
-        "East Asian", 
-        "South East Asian", 
-        "South Asian", 
-        "Middle Eastern", 
+        "Asian_American", 
+        "East_Asian", 
+        "South_East_Asian", 
+        "South_Asian", 
+        "Middle_Eastern", 
         "Pacific", 
         "Hispanic"
     ]),
