@@ -26,6 +26,7 @@ import { TrainModalInput } from "common/inferred"
 import { useRouter } from 'next/navigation'
 import { Switch } from '@/components/ui/switch'
 import { useAuth } from '@clerk/nextjs'
+import { BackgroundGradient } from '@/components/ui/background-gradient'
 
 
 type Props = {}
@@ -59,7 +60,7 @@ export default function Train(props: Props)  {
       const token = await getToken();
       const response = await axios.post(`${BACKEND_URL}/ai/training`, input, {
         headers: {
-          token : `bearer ${token}`,
+          Authorization : `bearer ${token}`,
           'Content-Type': 'application/json',
         },
         validateStatus: () => true, // Bypass axios built-in error throwing
@@ -145,14 +146,17 @@ export default function Train(props: Props)  {
   console.log(name, age, ethnicity, eyeColor, bald, type );
   
   return (
-    <div className='flex flex-col items-center justify-center h-full  bg-black'>
-    <Card className="md:w-[500px] lg:w-[700px] bg-neutral-800 text-white">
+    <div className='fixed top-0 left-0 w-full h-full z-[1000] flex flex-col items-center justify-center bg-black'>
+    <BackgroundGradient className="rounded-[22px]  p-4 sm:p-10 bg-white dark:bg-zinc-900">
+    <Card className="md:w-auto lg:w-auto bg-neutral-800 text-white p-4">
       <CardHeader>
         <CardTitle>Create Model</CardTitle>
         <CardDescription>Train your face on an AI Model.</CardDescription>
       </CardHeader>
+      
       <CardContent>
         <form>
+        <div className='flex flex-row gap-4'>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="name">Name</Label>
@@ -229,8 +233,10 @@ export default function Train(props: Props)  {
               onZip={handleZipRequest}
             />
           </div>
+          </div>
         </form>        
       </CardContent>
+     
       <CardFooter className="flex justify-between">
         <Button variant="outline" onClick={() =>  {
           router.push('/')
@@ -238,6 +244,7 @@ export default function Train(props: Props)  {
         <Button disabled={!zipUrl || !type || !age || !ethnicity ||  !eyeColor} onClick={trainModal}>Create Modal</Button>
       </CardFooter>      
     </Card>
+    </BackgroundGradient>
     </div>
   )
 }

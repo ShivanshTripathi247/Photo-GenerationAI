@@ -9,7 +9,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { authMiddleware } from "./middleware";
 
 
-const USER_ID = "1234";
+
 
 
 const PORT = process.env.PORT || 8080;
@@ -55,7 +55,9 @@ const s3Client = new S3Client({
 
 app.post("/ai/training", authMiddleware, async (req,res) => {
     const parsedBody = TrainModel.safeParse(req.body)
-    console.log(parsedBody);
+    
+    console.log( "=========== USER ID ==========\n",req.userId);
+
     
     if (!parsedBody.success) {
         console.log(parsedBody);
@@ -86,7 +88,7 @@ app.post("/ai/training", authMiddleware, async (req,res) => {
             ethnicity: parsedBody.data.ethnicity,
             eyeColor: parsedBody.data.eyeColor,
             bald: parsedBody.data.bald,
-            userId: USER_ID,
+            userId: req.userId!,
             zipUrl: parsedBody.data.zipUrl,
             falAiRequestId: request_id,
         }
@@ -124,7 +126,7 @@ app.post("/ai/generate", authMiddleware, async (req,res) => {
     const data = await prismaClient.outputImages.create({
         data: {
             prompt: parsedBody.data?.prompt,
-            userId: USER_ID,
+            userId: req.userId!,
             modelId: parsedBody.data.modelId,
             imageUrl: "",
             falAiRequestId: request_id
@@ -155,7 +157,7 @@ app.post("/pack/generate", authMiddleware, async (req,res) => {
     const images = await prismaClient.outputImages.createManyAndReturn({
         data: prompts.map((prompt) => ({
             prompt: prompt.prompt,
-            userId: USER_ID,
+            userId: req.userId!,
             modelId: parseBody.data.modelId,
             imageUrl: "",
         }))
@@ -184,7 +186,7 @@ app.get("/image/bulk", authMiddleware, async (req,res) => {
     const imagesData = await prismaClient.outputImages.findMany({
         where: {
             id: { in: ids },
-            userId: USER_ID,
+            userId: req.userId!,
         },
         skip: parseInt(offset),
         take: parseInt(limit)
