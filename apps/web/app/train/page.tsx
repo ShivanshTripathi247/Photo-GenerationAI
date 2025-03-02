@@ -147,8 +147,8 @@ export default function Train(props: Props)  {
   
   return (
     <div className='fixed top-0 left-0 w-full h-full z-[1000] flex flex-col items-center justify-center bg-black'>
-    <BackgroundGradient className="rounded-[22px]  p-4 sm:p-10 bg-white dark:bg-zinc-950">
-    <Card className="md:w-auto lg:w-auto dark:bg-zinc-950 text-white p-4">
+    <BackgroundGradient className="rounded-[22px] p-4 sm:p-10 bg-white dark:bg-zinc-950">
+    <Card className="md:w-auto lg:w-auto dark:bg-zinc-950 text-white p-4 relative z-50">
       <CardHeader>
         <CardTitle>Create Model</CardTitle>
         <CardDescription>Train your face on an AI Model.</CardDescription>
@@ -170,7 +170,7 @@ export default function Train(props: Props)  {
                 <SelectTrigger className='border-gray-300' id='type'>
                   <SelectValue placeholder='Select your gender'/>
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent position="popper" className="z-[1000]">
                   <SelectItem value='Man'>Man</SelectItem>
                   <SelectItem value='Woman'>Women</SelectItem>
                   <SelectItem value='Others'>Others</SelectItem>
@@ -191,7 +191,7 @@ export default function Train(props: Props)  {
                 <SelectTrigger className='border-gray-300' id="ethnicity">
                   <SelectValue placeholder="Select your ethnicity." />
                 </SelectTrigger>
-                <SelectContent position="popper">
+                <SelectContent position="popper" className="z-[1000]">
                   <SelectItem value="White">White</SelectItem>
                   <SelectItem value="Black">Black</SelectItem>
                   <SelectItem value="Asian_American">Asian American</SelectItem>
@@ -212,7 +212,7 @@ export default function Train(props: Props)  {
                 <SelectTrigger className='border-gray-300' id="eyeColor">
                   <SelectValue placeholder="Select your Eye-color." />
                 </SelectTrigger>
-                <SelectContent position="popper">
+                <SelectContent position="popper" className="z-[1000]">
                   <SelectItem value="Brown">Brown</SelectItem>
                   <SelectItem value="Blue">Blue</SelectItem>
                   <SelectItem value="Hazel">Hazel</SelectItem>

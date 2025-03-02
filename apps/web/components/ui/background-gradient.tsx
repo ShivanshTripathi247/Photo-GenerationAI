@@ -22,7 +22,10 @@ export const BackgroundGradient = ({
     },
   };
   return (
-    <div className={cn("relative p-[4px] group", containerClassName)}>
+    <div className={cn("relative p-[4px] group", containerClassName)} style={{ 
+      isolation: 'isolate',
+      zIndex: 0
+    }}>
       <motion.div
         variants={animate ? variants : undefined}
         initial={animate ? "initial" : undefined}
