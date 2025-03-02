@@ -147,8 +147,8 @@ export default function Train(props: Props)  {
   
   return (
     <div className='fixed top-0 left-0 w-full h-full z-[1000] flex flex-col items-center justify-center bg-black'>
-    <BackgroundGradient className="rounded-[22px]  p-4 sm:p-10 bg-white dark:bg-zinc-900">
-    <Card className="md:w-auto lg:w-auto bg-neutral-800 text-white p-4">
+    <BackgroundGradient className="rounded-[22px]  p-4 sm:p-10 bg-white dark:bg-zinc-950">
+    <Card className="md:w-auto lg:w-auto dark:bg-zinc-950 text-white p-4">
       <CardHeader>
         <CardTitle>Create Model</CardTitle>
         <CardDescription>Train your face on an AI Model.</CardDescription>
