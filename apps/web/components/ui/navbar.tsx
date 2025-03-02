@@ -31,7 +31,7 @@ function Navbar({ className }: { className?: string }) {
                     onChange={handleChange}
                     onSubmit={onSubmit}
             />
-          <nav className="flex items-center gap-4">
+          <nav className="flex items-center gap-4 mr-6">
             <MenuItem setActive={setActive} active={active} item="Services">
               <div className="flex flex-col space-y-4 text-sm">
                 <HoveredLink href="/web-dev">Web Development</HoveredLink>
