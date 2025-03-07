@@ -1,10 +1,12 @@
 'use client'
+import { ModeToggle } from "@/components/theme/theme-button";
 import { Button } from "@/components/ui/button";
 import { LampComponent } from "@/components/ui/lamp-effect";
 import Navbar from "@/components/ui/navbar";
 import { WavyBackground } from "@/components/ui/wavy-background";
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 
@@ -12,6 +14,7 @@ import { useState } from "react";
 export default function Home() {
   const { scrollYProgress, scrollY } = useScroll();
   const [isVisible, setIsVisible] = useState(false);
+  const router = useRouter();
   return (<>
     <div className="relative flex flex-col text-white bg-black min-h-screen">
       
@@ -22,9 +25,14 @@ export default function Home() {
         <div className="absolute top-10 right-6 w-auto rounded-full gap-4
         bg-transparent shadow-lg flex items-center justify-between z-50">
           {/* Add your content here (icon/text/etc) */}
+          <ModeToggle/>
           <SignedOut >
-            <SignInButton />
-            <SignUpButton />
+            <Button className=" bg-red-300">
+              <SignInButton />
+            </Button>
+            <Button className=" bg-red-300">
+              <SignUpButton />
+            </Button>         
           </SignedOut>
           <SignedIn>
             <UserButton />
@@ -40,9 +48,20 @@ export default function Home() {
         <p className="text-base md:text-lg mt-4 text-white font-normal inter-var text-center">
           Leverage the power of AI to generate you-specific Photos
         </p>
+        <div className="flex flec-row gap-4">
+        <SignedIn>
+        <Button className="mt-10 bg-red-300 hover:fuchsia-200 rounded-full"
+        onClick={()=>
+          router.push('/dashboard')
+        }>
+          Dashboard
+        </Button>
+        </SignedIn>
         <Button className="mt-10 bg-red-300 hover:fuchsia-200 rounded-full">
           View our Plans
         </Button>
+        
+        </div>
         
         {/* Scroll prompt inside hero section */}
         <motion.div 
