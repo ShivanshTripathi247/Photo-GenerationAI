@@ -1,4 +1,3 @@
-
 import { Camera } from "@/components/global/Camera"
 import Generate from "@/components/global/Generate"
 import { Packs } from "@/components/global/Packs"
@@ -12,8 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Tabs,
   TabsContent,
