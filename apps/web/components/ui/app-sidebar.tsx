@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { Calendar, Camera, Home, Inbox, Search, Settings } from "lucide-react"
 
 import {
   Sidebar,
@@ -14,6 +14,9 @@ import {
 } from "@/components/ui/sidebar"
 import { UserButton } from "@clerk/nextjs"
 import { Separator } from "./separator"
+import { useNavigate } from "react-router-dom"
+
+
 
 // Menu items.
 const items = [
@@ -45,9 +48,10 @@ const items = [
 ]
 
 export function AppSidebar() {
+  const navigate = useNavigate()
   return (
     <Sidebar>
-    <SidebarHeader className="text-bold text-3xl font-medium bg-zinc-800 backdrop-blur-3xl">Dashboard</SidebarHeader>
+    <SidebarHeader className="text-bold text-3xl font-medium bg-zinc-800 backdrop-blur-3xl flex flex-row justify-aside items-center"><Camera onClick={() => navigate('/')} />Dashboard</SidebarHeader>
     <Separator/>
       <SidebarContent>
         <SidebarGroup>

@@ -1,4 +1,5 @@
 
+import { Camera } from "@/components/global/Camera"
 import Generate from "@/components/global/Generate"
 import { Packs } from "@/components/global/Packs"
 import { Train } from "@/components/global/Train"
@@ -26,11 +27,28 @@ export default function Dashboard() {
     return <>
     <div className="bg-black overflow-scroll w-full h-screen">
     <Tabs defaultValue="account" className="w-full">
-      <TabsList className="grid w-full grid-cols-3">
+      <TabsList className="flex flex-row w-full">
+      <TabsTrigger value="gallery">Gallery</TabsTrigger>
         <TabsTrigger value="generate">Generate Image</TabsTrigger>
         <TabsTrigger value="train">Train a model</TabsTrigger>
         <TabsTrigger value="packs">Packs</TabsTrigger>
       </TabsList>
+      <TabsContent value="gallery">
+        <Card>
+          <CardHeader>
+            <CardTitle>Gallery.</CardTitle>
+            <CardDescription>
+              Generated images will be displayed here
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+              <Camera/>
+          </CardContent>
+          <CardFooter>
+            <Button>Save changes</Button>
+          </CardFooter>
+        </Card>
+      </TabsContent>
       <TabsContent value="generate">
         <Card>
           <CardHeader>
