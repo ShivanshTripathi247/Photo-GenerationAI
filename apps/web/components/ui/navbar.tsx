@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
 import { PlaceholdersAndVanishInput } from "./placeholders-and-vanish-input";
 
+
 function Navbar({ className }: { className?: string }) {
     const [active, setActive] = useState<string | null>(null);
     const placeholders = [
@@ -43,28 +44,22 @@ function Navbar({ className }: { className?: string }) {
             <MenuItem setActive={setActive} active={active} item="Products">
               <div className="text-sm grid grid-cols-2 gap-10 p-4">
                 <ProductItem
-                  title="Algochurn"
+                  title="Packs"
                   href="https://algochurn.com"
-                  src="https://assets.aceternity.com/demos/algochurn.webp"
-                  description="Prepare for tech interviews like never before."
+                  src="https://res.cloudinary.com/demgnq2iy/image/upload/v1741435583/photo-collage.png_uotkdp.png"
+                  description="Generate your photos from pre-tuned Packs"
                 />
                 <ProductItem
-                  title="Tailwind Master Kit"
+                  title="Generate"
                   href="https://tailwindmasterkit.com"
-                  src="https://assets.aceternity.com/demos/tailwindmasterkit.webp"
-                  description="Production ready Tailwind css components for your next project"
+                  src="https://res.cloudinary.com/demgnq2iy/image/upload/v1741382744/luxury_dpjlo8.jpg"
+                  description="Generate images from your own Prompts"
                 />
                 <ProductItem
-                  title="Moonbeam"
+                  title="Train"
                   href="https://gomoonbeam.com"
-                  src="https://assets.aceternity.com/demos/Screenshot+2024-02-21+at+11.51.31%E2%80%AFPM.png"
-                  description="Never write from scratch again. Go from idea to blog in minutes."
-                />
-                <ProductItem
-                  title="Rogue"
-                  href="https://userogue.com"
-                  src="https://assets.aceternity.com/demos/Screenshot+2024-02-21+at+11.47.07%E2%80%AFPM.png"
-                  description="Respond to government RFPs, RFIs and RFQs 10x faster using AI"
+                  src="https://res.cloudinary.com/demgnq2iy/image/upload/v1741412221/adventure_gz1rzd.jpg"
+                  description="Train your own face on AI to generate hyper-realistic photos"
                 />
               </div>
             </MenuItem>

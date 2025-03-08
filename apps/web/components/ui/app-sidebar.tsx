@@ -1,5 +1,4 @@
 import { Calendar, Camera, Home, Inbox, Search, Settings } from "lucide-react"
-
 import {
   Sidebar,
   SidebarContent,
@@ -49,7 +48,7 @@ const items = [
 export function AppSidebar() {
   return (
     <Sidebar>
-    <SidebarHeader className="text-bold text-3xl font-medium bg-zinc-800 backdrop-blur-3xl flex flex-row justify-aside items-center"><Camera />Dashboard</SidebarHeader>
+    <SidebarHeader className="text-bold text-3xl font-medium bg-zinc-800 backdrop-blur-3xl flex flex-row justify-aside items-center"><Camera/>Dashboard</SidebarHeader>
     <Separator/>
       <SidebarContent>
         <SidebarGroup>
